@@ -15,6 +15,6 @@ public class RegisterResponseDto extends ResponseDto {
     }
     public static ResponseEntity<ResponseDto> duplicateEmail(){
         ResponseDto result = new ResponseDto(409,ResponseStatus.DUPLICATE_EMAIL, ResponseMessage.DUPLICATE_EMAIL);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
     }
 }
