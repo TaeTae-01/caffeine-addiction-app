@@ -21,4 +21,7 @@ logs/
 # application.properties 파일 무시
 server/src/main/resources/application.properties
 
+# JetBrains IDE 설정 폴더
+.idea/
+
 
