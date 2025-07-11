@@ -1,8 +1,12 @@
 package com.example.caffein_addiction_app.auth.controller;
 
+import com.example.caffein_addiction_app.auth.dto.request.LoginRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
+import com.example.caffein_addiction_app.auth.dto.response.LoginResponseDto;
+import com.example.caffein_addiction_app.auth.dto.response.RefreshTokenResponseDto;
 import com.example.caffein_addiction_app.auth.dto.response.RegisterResponseDto;
 import com.example.caffein_addiction_app.auth.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,18 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<? super RegisterResponseDto> register(@Valid @RequestBody RegisterRequestDto dto){
         ResponseEntity<? super RegisterResponseDto> response = authService.register(dto);
+        return response;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<? super LoginResponseDto> login(@Valid @RequestBody LoginRequestDto dto){
+        ResponseEntity<? super LoginResponseDto> response = authService.login(dto);
+        return response;
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<? super RefreshTokenResponseDto> refreshToken(HttpServletRequest request) {
+        ResponseEntity<? super RefreshTokenResponseDto> response = authService.refreshToken(request);
         return response;
     }
 }

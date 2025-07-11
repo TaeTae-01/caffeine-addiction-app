@@ -11,7 +11,7 @@ public interface ResponseStatus {
     String NOT_EXISTED_USER = "NU";
 
     //401
-    String SIGN_IN_FAIL = "SF";
+    String LOG_IN_FAIL = "LF";
     String MISMATCH_FAIL = "MF";
     String AUTHORIZATION_FAIL = "AF";
     String INVALID_REFRESH_TOKEN = "IRT";

@@ -11,7 +11,7 @@ public interface ResponseMessage {
     String NOT_EXISTED_USER = "This user does not exist";
 
     //401
-    String SIGN_IN_FAIL = "Login information mismatch";
+    String LOG_IN_FAIL = "Login information mismatch";
     String AUTHORIZATION_FAIL = "Authorization Failed";
     String INVALID_REFRESH_TOKEN = "Invalid refresh token.";
     String EXPIRED_REFRESH_TOKEN = "Expired refresh token.";

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -87,5 +88,19 @@ public class JwtProvider {
         Integer id = Integer.valueOf(claims.getSubject());
 
         return id;
+    }
+
+    //refresh 토큰 남은 시간 리턴
+    public Duration getRemainingValidity(String refreshToken) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(refreshKey)
+                .build()
+                .parseClaimsJws(refreshToken)
+                .getBody();
+
+        Date exp = claims.getExpiration();
+        long seconds = Duration.between(Instant.now(), exp.toInstant()).getSeconds();
+
+        return Duration.ofSeconds(Math.max(seconds, 0));
     }
 }
