@@ -2,6 +2,7 @@ package com.example.caffein_addiction_app.auth.controller;
 
 import com.example.caffein_addiction_app.auth.dto.request.LoginRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
+import com.example.caffein_addiction_app.auth.dto.response.LogOutResponseDto;
 import com.example.caffein_addiction_app.auth.dto.response.LoginResponseDto;
 import com.example.caffein_addiction_app.auth.dto.response.RefreshTokenResponseDto;
 import com.example.caffein_addiction_app.auth.dto.response.RegisterResponseDto;
@@ -37,6 +38,12 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<? super RefreshTokenResponseDto> refreshToken(HttpServletRequest request) {
         ResponseEntity<? super RefreshTokenResponseDto> response = authService.refreshToken(request);
+        return response;
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<? super LogOutResponseDto> logout(HttpServletRequest request) {
+        ResponseEntity<? super LogOutResponseDto> response = authService.logout(request);
         return response;
     }
 }

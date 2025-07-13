@@ -14,6 +14,7 @@ public interface ResponseStatus {
     String LOG_IN_FAIL = "LF";
     String MISMATCH_FAIL = "MF";
     String AUTHORIZATION_FAIL = "AF";
+    String INVALID_TOKEN = "IT";
     String INVALID_REFRESH_TOKEN = "IRT";
     String EXPIRED_REFRESH_TOKEN = "ERT";
 
