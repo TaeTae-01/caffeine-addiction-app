@@ -2,6 +2,7 @@ package com.example.caffein_addiction_app.auth.service;
 
 import com.example.caffein_addiction_app.auth.dto.request.LoginRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
+import com.example.caffein_addiction_app.auth.dto.response.LogOutResponseDto;
 import com.example.caffein_addiction_app.auth.dto.response.LoginResponseDto;
 import com.example.caffein_addiction_app.auth.dto.response.RefreshTokenResponseDto;
 import com.example.caffein_addiction_app.auth.dto.response.RegisterResponseDto;
@@ -88,11 +89,12 @@ public class AuthServiceImpl implements AuthService{
 
         String refreshToken = null;
 
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("refreshToken")) {
-                refreshToken = cookie.getValue();
-                System.out.println(refreshToken);
-                break;
+        if(request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("refreshToken")) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
             }
         }
 
@@ -132,5 +134,69 @@ public class AuthServiceImpl implements AuthService{
         refreshTokenService.saveToken(userId, newRefreshToken);
 
         return RefreshTokenResponseDto.success(newAccessToken, newRefreshToken);
+    }
+
+    @Override
+    public ResponseEntity<? super LogOutResponseDto> logout(HttpServletRequest request) {
+
+        String bearer = null;
+        String accessToken = null;
+
+        //Authorization에서 access token 추출
+        bearer = request.getHeader("Authorization");
+        if (bearer == null || !bearer.startsWith("Bearer ")) return LogOutResponseDto.invalidToken();
+
+        accessToken = bearer.substring(7);
+        if(accessToken == null) return LogOutResponseDto.invalidToken();
+
+        Integer userIdFromAccessToken;
+
+        try {
+            userIdFromAccessToken = jwtProvider.validateAccessToken(accessToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return LogOutResponseDto.invalidToken();
+        }
+
+        if(userIdFromAccessToken == null) return LogOutResponseDto.invalidToken();
+
+        String refreshToken = null;
+        if(request.getCookies()!=null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("refreshToken")) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if(refreshToken == null) return LogOutResponseDto.invalidToken();
+
+        Integer userIdFromRefreshToken;
+
+        try {
+            userIdFromRefreshToken = jwtProvider.validateRefreshToken(refreshToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return LogOutResponseDto.invalidToken();
+        }
+
+        if(userIdFromRefreshToken == null) return LogOutResponseDto.invalidToken();
+
+
+        //이미 그 전에 로그아웃한 경우 -> 블랙리스트에 refresh token 들어가 있음
+        if (blacklistService.isBlacklisted(refreshToken)) return LogOutResponseDto.invalidToken();
+
+        //redis에서 refresh token 삭제
+        refreshTokenService.deleteToken(userIdFromAccessToken);
+
+        //블랙리스트에 refresh token 추가
+        Duration remaining = jwtProvider.getRemainingValidity(refreshToken);
+        if (!remaining.isZero()) {
+            blacklistService.blacklistToken(refreshToken, remaining);
+        }
+
+
+        return LogOutResponseDto.success();
     }
 }

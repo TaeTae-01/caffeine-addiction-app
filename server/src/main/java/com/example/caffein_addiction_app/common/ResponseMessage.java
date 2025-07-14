@@ -13,6 +13,7 @@ public interface ResponseMessage {
     //401
     String LOG_IN_FAIL = "Login information mismatch";
     String AUTHORIZATION_FAIL = "Authorization Failed";
+    String INVALID_TOKEN = "Invalid token.";
     String INVALID_REFRESH_TOKEN = "Invalid refresh token.";
     String EXPIRED_REFRESH_TOKEN = "Expired refresh token.";
 
