@@ -16,6 +16,7 @@ function App() {
         'http://localhost:8080/api/auth/logout',
         {
           method: 'POST',
+          credentials:'include',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${AccessToken}`,
@@ -25,11 +26,11 @@ function App() {
 
       const data = await res.json();
 
-      if (data.status === 200) {
+      if (data.code === 200) {
         console.log('로그아웃 성공!');
         localStorage.removeItem('token');
         alert('로그아웃되었습니다.');
-      } else if (data.status === 403) {
+      } else if (data.code === 403) {
         console.log('유효하지 않은 토큰');
         localStorage.removeItem('token'); // 어차피 무효한 토큰이니 삭제
         alert('토큰이 유효하지 않습니다.');

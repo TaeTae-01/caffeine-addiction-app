@@ -27,7 +27,7 @@ public class LoginResponseDto extends ResponseDto {
         ResponseCookie cookie = ResponseCookie.from("refreshToken",refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .path("/api/auth") //refresh할때만 쿠키전송
+                .path("/api/auth") // /api/auth 주소로 시작하는 api에 쿠키 전송
                 .maxAge(Duration.ofDays(30)) //refresh token = 30일
                 .sameSite("Strict")
                 .build();
