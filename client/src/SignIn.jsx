@@ -55,10 +55,9 @@ function SignIn() {
 
         // JWT 토큰이 있다면 저장
         if (data.token) {
-          console.log('토큰 받음:', data.token);
+          console.log('Access 토큰 받음:', data.token);
           localStorage.setItem('AccessToken', data.token);
           console.log('토큰 저장 완료');
-          console.log('리프레시 토큰은 브라우저가 자동으로 쿠키에 저장됩니다');
         }
                 
         if (data.expirationTime) {
