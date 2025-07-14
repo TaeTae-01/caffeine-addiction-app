@@ -165,6 +165,7 @@ public class AuthServiceImpl implements AuthService{
             for (Cookie cookie : request.getCookies()) {
                 if (cookie.getName().equals("refreshToken")) {
                     refreshToken = cookie.getValue();
+                    System.out.println(refreshToken);
                     break;
                 }
             }
