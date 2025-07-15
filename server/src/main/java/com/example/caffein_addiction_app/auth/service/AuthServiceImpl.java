@@ -189,12 +189,22 @@ public class AuthServiceImpl implements AuthService{
         if (blacklistService.isBlacklisted(refreshToken)) return LogOutResponseDto.invalidToken();
 
         //redis에서 refresh token 삭제
-        refreshTokenService.deleteToken(userIdFromAccessToken);
+        try {
+            refreshTokenService.deleteToken(userIdFromAccessToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return LogOutResponseDto.databaseError();
+        }
 
         //블랙리스트에 refresh token 추가
-        Duration remaining = jwtProvider.getRemainingValidity(refreshToken);
-        if (!remaining.isZero()) {
-            blacklistService.blacklistToken(refreshToken, remaining);
+        try {
+            Duration remaining = jwtProvider.getRemainingValidity(refreshToken);
+            if (!remaining.isZero()) {
+                blacklistService.blacklistToken(refreshToken, remaining);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return LogOutResponseDto.databaseError();
         }
 
 

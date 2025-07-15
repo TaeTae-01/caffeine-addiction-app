@@ -17,25 +17,16 @@ public class LogOutResponseDto extends ResponseDto {
     public static ResponseEntity<LogOutResponseDto> success(){
         LogOutResponseDto result = new LogOutResponseDto();
 
-        //access토큰 쿠키에서 삭제
-        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", "")
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(0)
-                .sameSite("Strict")
-                .build();
-
         //refresh토큰 쿠키에서 삭제
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", "")
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(true)
-                .path("/api/auth/refresh")
+                .path("/api/auth")
                 .maxAge(0)
                 .sameSite("Strict")
                 .build();
 
-        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString(), refreshTokenCookie.toString()).body(result);
+        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE, cookie.toString()).body(result);
     }
 
     public static ResponseEntity<ResponseDto> invalidToken(){
