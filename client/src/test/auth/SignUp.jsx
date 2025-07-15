@@ -8,6 +8,7 @@ function SignUp() {
   const [weight, setWeight] = useState('');
 
   const handleSignUp = async (e) => {
+    // 버튼 누르고 data 변경이 일어나면 안되니까 막기
     e.preventDefault();
  
     const payload = {
@@ -30,9 +31,9 @@ function SignUp() {
       );
 
       const data = await res.json();
-
+      
       if (res.status === 200) {
-        console.log("성공 & 성공 DATA: " + data);
+        console.log("성공 & 성공 DATA: " + data.code);
         alert("성공");
       }
       else if (res.status === 400) {
