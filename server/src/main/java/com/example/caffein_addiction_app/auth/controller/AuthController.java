@@ -2,19 +2,13 @@ package com.example.caffein_addiction_app.auth.controller;
 
 import com.example.caffein_addiction_app.auth.dto.request.LoginRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
-import com.example.caffein_addiction_app.auth.dto.response.LogOutResponseDto;
-import com.example.caffein_addiction_app.auth.dto.response.LoginResponseDto;
-import com.example.caffein_addiction_app.auth.dto.response.RefreshTokenResponseDto;
-import com.example.caffein_addiction_app.auth.dto.response.RegisterResponseDto;
+import com.example.caffein_addiction_app.auth.dto.response.*;
 import com.example.caffein_addiction_app.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -44,6 +38,12 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<? super LogOutResponseDto> logout(HttpServletRequest request) {
         ResponseEntity<? super LogOutResponseDto> response = authService.logout(request);
+        return response;
+    }
+
+    @GetMapping("/user-info")
+    public ResponseEntity<? super UserInfoResponseDto> userInfo(HttpServletRequest request){
+        ResponseEntity<? super UserInfoResponseDto> response = authService.userInfo(request);
         return response;
     }
 }

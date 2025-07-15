@@ -28,7 +28,10 @@ public class User {
     @Column(name = "weight")
     private Float weight;
 
-    public User(RegisterRequestDto dto, String encodedPassword){
+    @Column(name = "daily_caffeine_limit")
+    private Integer dailyCaffeineLimit;
+
+    public User(RegisterRequestDto dto, String encodedPassword) {
         this.email = dto.getEmail();
         this.password = encodedPassword;
         this.name = dto.getName();

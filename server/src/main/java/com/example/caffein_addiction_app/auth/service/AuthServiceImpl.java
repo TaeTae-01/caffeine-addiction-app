@@ -2,10 +2,7 @@ package com.example.caffein_addiction_app.auth.service;
 
 import com.example.caffein_addiction_app.auth.dto.request.LoginRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
-import com.example.caffein_addiction_app.auth.dto.response.LogOutResponseDto;
-import com.example.caffein_addiction_app.auth.dto.response.LoginResponseDto;
-import com.example.caffein_addiction_app.auth.dto.response.RefreshTokenResponseDto;
-import com.example.caffein_addiction_app.auth.dto.response.RegisterResponseDto;
+import com.example.caffein_addiction_app.auth.dto.response.*;
 import com.example.caffein_addiction_app.auth.entity.User;
 import com.example.caffein_addiction_app.auth.repository.UserRepository;
 import com.example.caffein_addiction_app.token.JwtProvider;
@@ -209,5 +206,33 @@ public class AuthServiceImpl implements AuthService{
 
 
         return LogOutResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super UserInfoResponseDto> userInfo(HttpServletRequest request) {
+
+        User user = null;
+
+        try {
+            String bearer = null;
+            String accessToken = null;
+            bearer = request.getHeader("Authorization");
+            if (bearer == null || !bearer.startsWith("Bearer ")) return UserInfoResponseDto.invalidToken();
+
+            accessToken = bearer.substring(7);
+
+            Integer userId;
+            userId = jwtProvider.validateAccessToken(accessToken);
+            Optional<User> userOpt = userRepository.findById(userId);
+            if(userOpt.isEmpty()) return UserInfoResponseDto.notExistedUser();
+
+            user = userOpt.get();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return UserInfoResponseDto.invalidToken();
+        }
+
+        return UserInfoResponseDto.success(user);
     }
 }
