@@ -1,15 +1,27 @@
+import { useCallback } from "react";
+import { API_ENDPOINTS, apiCall } from "../../config/api";
+import { ERROR_MESSAGES, HTTP_STATUS } from "../../config/constants";
+import useLoading from "../../hooks/useLoading";
+
 function Logout() {
 
-  const handleLogout = async (e) => {
+  const [isLoading, startLoading] = useLoading();
+
+    const logoutUser = useCallback((credential) => {
+      return apiCall(API_ENDPOINTS.AUTH.LOGOUT, {
+        method: 'POST',
+        credentials: 'include', // 쿠키 자동 처리를 위해서 필요함
+      });
+    }, []);
+  
+  const handleLogout = useCallback(async (e) => {
+    console.log('=== 로그아웃 시작 ===');
+    // 현재 쿠키 상태 확인
+    console.log('현재 브라우저 쿠키:', document.cookie);
     
     try {
-      console.log('=== 로그아웃 시작 ===');
-      
       // 토큰이 로컬 스토리지에 있는지 체크
       const AccessToken = localStorage.getItem('AccessToken');
-      
-      // 현재 쿠키 상태 확인
-      console.log('현재 브라우저 쿠키:', document.cookie);
       
       // 현재 시간과 토큰 정보 확인
       if (AccessToken) {
@@ -41,17 +53,7 @@ function Logout() {
       console.log('- Content-Type:', 'application/json');
 
       // logout API 요청 날리기
-      const res = await fetch(
-        'http://localhost:8080/api/auth/logout',
-        {
-          method: 'POST',
-          credentials: 'include', // 이거 해야 쿠키 추가됨
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${AccessToken}`,
-          },
-        }
-      );
+      const res = await startLoading(logoutUser());
 
       console.log('=== 로그아웃 응답 정보 ===');
       console.log('응답 상태 코드:', res.status);
@@ -61,27 +63,26 @@ function Logout() {
       const data = await res.json();
       console.log('응답 데이터:', data);
 
-      if (res.status === 200) {
+      if (res.status === HTTP_STATUS.OK) {
+        console.log('서버 응답 코드:', data.code);
+        console.log('서버 응답 상태:', data.status);
+        console.log('서버 응답 메시지:', data.message);
         console.log('로그아웃 성공!');
-        console.log('서버 응답:', data);
-      
+        // AccessToken 삭제
         localStorage.removeItem('AccessToken');
-        
         alert('로그아웃되었습니다.');
         
-      } else if (res.status === 403) {
-        console.log('유효하지 않은 토큰 (403)');
-        console.log('서버 응답:', data);
-        
+      } else if (res.status === HTTP_STATUS.FORBIDDEN) {
+        console.log('오류 상세:', data);        
+        // AccessToken 삭제
         localStorage.removeItem('AccessToken'); // 올바른 키로 삭제
-        alert('토큰이 유효하지 않습니다. 다시 로그인해주세요.');
+        alert(ERROR_MESSAGES.FORBIDDEN);
         
-      } else if (res.status === 401) {
-        console.log('인증 실패 (401)');
-        console.log('서버 응답:', data);
-        
+      } else if (res.status === HTTP_STATUS.UNAUTHORIZED) {
+        console.log('오류 상세:', data);
+        // AccessToken 삭제
         localStorage.removeItem('AccessToken');
-        alert('인증이 만료되었습니다. 다시 로그인해주세요.');
+        alert(ERROR_MESSAGES.UNAUTHORIZED)
         
       } else {
         console.log(`로그아웃 실패 (${res.status}):`, data.status);
@@ -92,17 +93,19 @@ function Logout() {
       
       console.log('=== 로그아웃 과정 종료 ===');
       
+      // 페이지 새로고침 로그 확인할 땐 개발자도구 -> console/network preserve log 켜서 안날라가게 막아야함      
+      window.location.reload();
+      
     } catch (error) {
-      console.log('=== 로그아웃 네트워크 오류 ===');
+      console.log('=== 네트워크 오류 발생 ===');
       console.error('오류 타입:', error.name);
       console.error('오류 메시지:', error.message);
       console.error('전체 오류 객체:', error);
-      
       // 네트워크 오류 시에도 로컬 토큰 삭제
       localStorage.removeItem('AccessToken');
-      alert(`네트워크 오류가 발생했습니다: ${error.message}`);
+      alert(`${ERROR_MESSAGES.NETWORK}: ${error.message}`);
     }
-  };
+  }, []);
 
   return (
     <>
