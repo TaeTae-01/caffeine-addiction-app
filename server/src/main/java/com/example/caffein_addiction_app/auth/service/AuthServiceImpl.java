@@ -1,5 +1,6 @@
 package com.example.caffein_addiction_app.auth.service;
 
+import com.example.caffein_addiction_app.auth.dto.request.EditUserInfoRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.LoginRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
 import com.example.caffein_addiction_app.auth.dto.response.*;
@@ -10,12 +11,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -209,30 +209,46 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public ResponseEntity<? super UserInfoResponseDto> userInfo(HttpServletRequest request) {
+    public ResponseEntity<? super GetUserInfoResponseDto> getUserInfo(Integer userId) {
 
         User user = null;
 
         try {
-            String bearer = null;
-            String accessToken = null;
-            bearer = request.getHeader("Authorization");
-            if (bearer == null || !bearer.startsWith("Bearer ")) return UserInfoResponseDto.invalidToken();
-
-            accessToken = bearer.substring(7);
-
-            Integer userId;
-            userId = jwtProvider.validateAccessToken(accessToken);
             Optional<User> userOpt = userRepository.findById(userId);
-            if(userOpt.isEmpty()) return UserInfoResponseDto.notExistedUser();
+            if(userOpt.isEmpty()) return GetUserInfoResponseDto.notExistedUser();
 
             user = userOpt.get();
 
         } catch (Exception e) {
             e.printStackTrace();
-            return UserInfoResponseDto.invalidToken();
+            return GetUserInfoResponseDto.databaseError();
         }
 
-        return UserInfoResponseDto.success(user);
+        return GetUserInfoResponseDto.success(user);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<? super EditUserInfoResponseDto> editUserInfo(Integer userId, EditUserInfoRequestDto dto) {
+
+        try{
+            User user = userRepository.findById(userId)
+                    .orElse(null);
+
+            if(user == null) return EditUserInfoResponseDto.notExistedUser();
+
+
+            Integer foundId = userRepository.findIdByEmail(dto.getEmail());
+            //다른 사용자 이메일과 중복
+            if(foundId != null && !foundId.equals(userId)) return EditUserInfoResponseDto.duplicateEmail();
+
+            user.editUserInfo(dto);
+            userRepository.save(user);
+        }catch (Exception e){
+            e.printStackTrace();
+            return EditUserInfoResponseDto.databaseError();
+        }
+
+        return EditUserInfoResponseDto.success();
     }
 }

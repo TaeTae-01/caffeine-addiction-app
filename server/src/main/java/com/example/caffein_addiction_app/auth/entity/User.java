@@ -1,5 +1,6 @@
 package com.example.caffein_addiction_app.auth.entity;
 
+import com.example.caffein_addiction_app.auth.dto.request.EditUserInfoRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,5 +37,13 @@ public class User {
         this.password = encodedPassword;
         this.name = dto.getName();
         this.weight = dto.getWeight();
+        this.dailyCaffeineLimit = dto.getDailyCaffeineLimit();
+    }
+
+    public void editUserInfo(EditUserInfoRequestDto dto){
+        this.email = dto.getEmail();
+        this.name = dto.getName();
+        this.weight = dto.getWeight();
+        this.dailyCaffeineLimit = dto.getDailyCaffeineLimit();
     }
 }

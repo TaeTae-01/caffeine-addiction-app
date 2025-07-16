@@ -1,5 +1,6 @@
 package com.example.caffein_addiction_app.auth.controller;
 
+import com.example.caffein_addiction_app.auth.dto.request.EditUserInfoRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.LoginRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
 import com.example.caffein_addiction_app.auth.dto.response.*;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,9 +43,15 @@ public class AuthController {
         return response;
     }
 
-    @GetMapping("/user-info")
-    public ResponseEntity<? super UserInfoResponseDto> userInfo(HttpServletRequest request){
-        ResponseEntity<? super UserInfoResponseDto> response = authService.userInfo(request);
+    @GetMapping("/user/info")
+    public ResponseEntity<? super GetUserInfoResponseDto> userInfo(@AuthenticationPrincipal Integer userId){
+        ResponseEntity<? super GetUserInfoResponseDto> response = authService.getUserInfo(userId);
+        return response;
+    }
+
+    @PostMapping("/user/edit")
+    public ResponseEntity<? super EditUserInfoResponseDto> userInfo(@AuthenticationPrincipal Integer userId , @Valid @RequestBody EditUserInfoRequestDto dto){
+        ResponseEntity<? super EditUserInfoResponseDto> response = authService.editUserInfo(userId, dto);
         return response;
     }
 }

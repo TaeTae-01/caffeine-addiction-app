@@ -1,5 +1,6 @@
 package com.example.caffein_addiction_app.auth.service;
 
+import com.example.caffein_addiction_app.auth.dto.request.EditUserInfoRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.LoginRequestDto;
 import com.example.caffein_addiction_app.auth.dto.request.RegisterRequestDto;
 import com.example.caffein_addiction_app.auth.dto.response.*;
@@ -12,5 +13,6 @@ public interface AuthService {
     ResponseEntity<? super LoginResponseDto> login(LoginRequestDto dto);
     ResponseEntity<? super RefreshTokenResponseDto> refreshToken(HttpServletRequest request);
     ResponseEntity<? super LogOutResponseDto> logout(HttpServletRequest request);
-    ResponseEntity<? super UserInfoResponseDto> userInfo(HttpServletRequest request);
+    ResponseEntity<? super GetUserInfoResponseDto> getUserInfo(Integer userId);
+    ResponseEntity<? super EditUserInfoResponseDto> editUserInfo(Integer userId, EditUserInfoRequestDto dto);
 }
