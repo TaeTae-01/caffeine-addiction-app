@@ -242,8 +242,15 @@ public class AuthServiceImpl implements AuthService{
             //다른 사용자 이메일과 중복
             if(foundId != null && !foundId.equals(userId)) return EditUserInfoResponseDto.duplicateEmail();
 
-            user.editUserInfo(dto);
-            userRepository.save(user);
+            if (dto.getEmail() != null) user.setEmail(dto.getEmail());
+            if (dto.getName() != null) user.setName(dto.getName());
+            if (dto.getWeight() != null) user.setWeight(dto.getWeight());
+            if (dto.getDailyCaffeineLimit() != null) user.setDailyCaffeineLimit(dto.getDailyCaffeineLimit());
+
+
+            //transactional이 자동으로 update해줌
+//            user.editUserInfo(dto);
+//            userRepository.save(user);
         }catch (Exception e){
             e.printStackTrace();
             return EditUserInfoResponseDto.databaseError();

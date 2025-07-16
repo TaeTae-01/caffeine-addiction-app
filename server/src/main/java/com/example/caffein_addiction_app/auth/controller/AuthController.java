@@ -49,7 +49,7 @@ public class AuthController {
         return response;
     }
 
-    @PostMapping("/user/edit")
+    @PatchMapping("/user/edit")
     public ResponseEntity<? super EditUserInfoResponseDto> userInfo(@AuthenticationPrincipal Integer userId , @Valid @RequestBody EditUserInfoRequestDto dto){
         ResponseEntity<? super EditUserInfoResponseDto> response = authService.editUserInfo(userId, dto);
         return response;
