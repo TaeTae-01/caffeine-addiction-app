@@ -1,6 +1,6 @@
 import { Routes, Route, Link } from 'react-router-dom'
-import AuthTest from './test/auth/AuthTest'
-import Home from './components/Home';
+import AuthTestPage from './test/auth/AuthTestPage'
+import Home from './pages/Home';
 
 function App() { 
 
@@ -20,8 +20,9 @@ function App() {
       </nav>
       
       <Routes>
-        <Route path="/test/auth" element={<AuthTest />} />
+        <Route path="/test/auth/*" element={<AuthTestPage />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </>
   );

@@ -388,7 +388,8 @@ useEffect(() => {
       setTimeLeft(prev => {
         const newTime = prev - 1
         
-        if (newTime <= 60 && newTime > 58) { // 60초가 되는 순간에만 갱신
+        // 60초가 되는 순간에만 갱신
+        if (newTime <= 60 && newTime > 58) { 
           console.log('[USERINFO] 자동 갱신 트리거 - 남은 시간:', newTime)
           refreshToken()
         }
@@ -445,24 +446,32 @@ useEffect(() => {
   }
   
   return (
+    // 전체 페이지 컨테이너: 최소 높이, 배경색, 패딩, 다크 모드 지원
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+      {/* 메인 콘텐츠 컨테이너: 최대 너비, 중앙 정렬 */}
       <div className="max-w-6xl mx-auto">
+        {/* 페이지 제목: 큰 글자, 굵게, 중앙 정렬, 하단 마진, 다크 모드 지원 */}
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-white">
           사용자 정보 + 토큰 테스트
         </h1>
         
+        {/* 메인 그리드 레이아웃: 1열(모바일), 2열(대형화면), 간격 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* 토큰 정보 섹션 */}
+          {/* 토큰 정보 카드: 흰색 배경, 둥근 모서리, 그림자, 패딩, 다크 모드 지원 */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            {/* 섹션 제목: 큰 글자, 굵게, 하단 마진, 다크 모드 지원 */}
             <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
               토큰 정보 및 관리
             </h2>
             
-            {/* 로그인 상태 */}
+            {/* 로그인 상태 표시 */}
             <div className="mb-4">
+              {/* 레이블: 블록 요소, 작은 글자, 굵게, 하단 마진, 다크 모드 지원 */}
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 로그인 상태:
               </label>
+              {/* 로그인 상태 표시 박스: 패딩, 둥근 모서리, 중앙 정렬, 굵은 글씨, 조건부 배경색 */}
               <div className={`p-3 rounded text-center font-semibold ${
                 isLoggedIn ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
                 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
@@ -473,9 +482,11 @@ useEffect(() => {
             
             {/* 토큰 표시 */}
             <div className="mb-4">
+              {/* 레이블: 블록 요소, 작은 글자, 굵게, 하단 마진, 다크 모드 지원 */}
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 현재 AccessToken:
               </label>
+              {/* 토큰 표시 영역: 패딩, 배경색, 둥근 모서리, 경계선, 작은 글자, 줄바꿈 처리, 최대 높이, 스크롤, 다크 모드 지원 */}
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded border text-xs break-all max-h-32 overflow-y-auto">
                 {localStorage.getItem('AccessToken') || '토큰이 없습니다'}
               </div>
@@ -483,9 +494,11 @@ useEffect(() => {
             
             {/* 토큰 남은 시간 */}
             <div className="mb-4">
+              {/* 레이블: 블록 요소, 작은 글자, 굵게, 하단 마진, 다크 모드 지원 */}
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 토큰 남은 시간:
               </label>
+              {/* 토큰 시간 표시: 패딩, 둥근 모서리, 중앙 정렬, 고정폭 글꼴, 큰 글자, 조건부 배경색 */}
               <div className={`p-3 rounded text-center font-mono text-lg ${
                 timeLeft > 300 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
                 timeLeft > 60 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
@@ -495,7 +508,7 @@ useEffect(() => {
               </div>
             </div>
             
-            {/* 토큰 갱신 버튼 */}
+            {/* 토큰 갱신 버튼: 전체 너비, 배경색, 호버 효과, 흰색 텍스트, 굵은 글씨, 패딩, 둥근 모서리, 전환 효과, 비활성화 스타일 */}
             <button
               onClick={refreshToken}
               disabled={isLoading}
@@ -505,21 +518,26 @@ useEffect(() => {
             </button>
             
             {/* 자동 리프레시 토글 */}
+            {/* 자동 리프레시 컨테이너: 플렉스, 아이템 중앙 정렬, 양쪽 정렬, 패딩, 배경색, 둥근 모서리, 다크 모드 지원 */}
             <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
               <div>
+                {/* 자동 리프레시 제목: 작은 글자, 굵게, 다크 모드 지원 */}
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   자동 리프레시 (1분 전 갱신)
                 </span>
+                {/* 자동 리프레시 설명: 아주 작은 글자, 연한 색상, 다크 모드 지원 */}
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   토큰이 1분 남으면 자동으로 갱신됩니다
                 </p>
               </div>
+              {/* 토글 버튼: 상대 위치, 인라인 플렉스, 높이, 너비, 아이템 중앙 정렬, 둥근 모서리, 조건부 배경색 */}
               <button
                 onClick={toggleAutoRefresh}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full ${
                   autoRefreshEnabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'
                 }`}
               >
+                {/* 토글 스위치: 인라인 블록, 높이, 너비, 변환, 둥근 모서리, 흰색 배경, 전환 효과, 조건부 위치 */}
                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
                   autoRefreshEnabled ? 'translate-x-6' : 'translate-x-1'
                 }`} />
@@ -528,16 +546,23 @@ useEffect(() => {
           </div>
           
           {/* 사용자 정보 섹션 */}
+          {/* 사용자 정보 카드: 흰색 배경, 둥근 모서리, 그림자, 패딩, 다크 모드 지원 */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            {/* 섹션 제목: 큰 글자, 굵게, 하단 마진, 다크 모드 지원 */}
             <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
               사용자 정보 조회 및 수정
             </h2>
             
             {/* 사용자 정보 표시 영역 */}
+            {/* 정보 표시 컨테이너: 배경색, 패딩, 둥근 모서리, 하단 마진, 다크 모드 지원 */}
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
+              {/* 정보 목록: 수직 간격 */}
               <div className="space-y-2">
+                {/* 각 정보 행: 플렉스 레이아웃 */}
                 <div className="flex">
+                  {/* 레이블: 굵은 글씨, 고정 너비, 다크 모드 지원 */}
                   <span className="font-semibold text-gray-700 dark:text-gray-300 w-24">ID:</span>
+                  {/* 값: 다크 모드 지원 */}
                   <span className="text-gray-900 dark:text-white">{userId || '정보 없음'}</span>
                 </div>
                 <div className="flex">
@@ -558,6 +583,7 @@ useEffect(() => {
               </div>
             </div>
 
+            {/* 사용자 정보 가져오기 버튼: 전체 너비, 배경색, 호버 효과, 흰색 텍스트, 굵은 글씨, 패딩, 둥근 모서리, 전환 효과, 비활성화 스타일, 하단 마진 */}
             <button
               onClick={getUserInfo}
               disabled={isLoading}
@@ -567,11 +593,15 @@ useEffect(() => {
             </button>
 
             {/* 정보 수정 폼 */}
+            {/* 폼 컨테이너: 수직 간격 */}
             <div className="space-y-3">
+              {/* 이메일 입력 필드 */}
               <div>
+                {/* 레이블: 블록 요소, 작은 글자, 굵게, 하단 마진, 다크 모드 지원 */}
                 <label className="block text-gray-700 text-sm font-bold mb-1 dark:text-gray-300">
                   이메일
                 </label>
+                {/* 이메일 입력: 그림자, 외관 없음, 경계선, 둥근 모서리, 전체 너비, 패딩, 간격 좁게, 포커스 스타일, 다크 모드 지원 */}
                 <input
                   type="email"
                   value={userEmail}
@@ -581,10 +611,12 @@ useEffect(() => {
                 />
               </div>
 
+              {/* 새 비밀번호 입력 필드 */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-1 dark:text-gray-300">
                   새 비밀번호
                 </label>
+                {/* 비밀번호 입력: 그림자, 외관 없음, 경계선, 둥근 모서리, 전체 너비, 패딩, 간격 좁게, 포커스 스타일, 다크 모드 지원 */}
                 <input
                   type="password"
                   value={userPassword}
@@ -594,10 +626,12 @@ useEffect(() => {
                 />
               </div>
 
+              {/* 비밀번호 확인 입력 필드 */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-1 dark:text-gray-300">
                   비밀번호 확인
                 </label>
+                {/* 비밀번호 확인 입력: 그림자, 외관 없음, 경계선, 둥근 모서리, 전체 너비, 패딩, 간격 좁게, 포커스 스타일, 다크 모드 지원 */}
                 <input
                   type="password"
                   value={userPasswordConfirm}
@@ -607,10 +641,12 @@ useEffect(() => {
                 />
               </div>
 
+              {/* 이름 입력 필드 */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-1 dark:text-gray-300">
                   이름
                 </label>
+                {/* 이름 입력: 그림자, 외관 없음, 경계선, 둥근 모서리, 전체 너비, 패딩, 간격 좁게, 포커스 스타일, 다크 모드 지원 */}
                 <input
                   type="text"
                   value={userName}
@@ -620,10 +656,12 @@ useEffect(() => {
                 />
               </div>
 
+              {/* 몸무게 입력 필드 */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-1 dark:text-gray-300">
                   몸무게 (kg)
                 </label>
+                {/* 몸무게 입력: 숫자 타입, 소수점 단위, 그림자, 외관 없음, 경계선, 둥근 모서리, 전체 너비, 패딩, 간격 좁게, 포커스 스타일, 다크 모드 지원 */}
                 <input
                   type="number"
                   step="0.1"
@@ -634,10 +672,12 @@ useEffect(() => {
                 />
               </div>
 
+              {/* 카페인 제한 입력 필드 */}
               <div>
                 <label className="block text-gray-700 text-sm font-bold mb-1 dark:text-gray-300">
                   일일 카페인 제한 (mg)
                 </label>
+                {/* 카페인 제한 입력: 숫자 타입, 그림자, 외관 없음, 경계선, 둥근 모서리, 전체 너비, 패딩, 간격 좁게, 포커스 스타일, 다크 모드 지원 */}
                 <input
                   type="number"
                   value={userCaffeineLimit}
@@ -648,6 +688,7 @@ useEffect(() => {
               </div>
             </div>
 
+            {/* 사용자 정보 수정 버튼: 전체 너비, 초록색 배경, 호버 효과, 흰색 텍스트, 굵은 글씨, 패딩, 둥근 모서리, 전환 효과, 비활성화 스타일, 상단 마진 */}
             <button
               onClick={editUserInfo}
               disabled={isLoading || !hasChanges}
